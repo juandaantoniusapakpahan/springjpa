@@ -15,8 +15,13 @@ import java.util.List;
 @Service
 public class ProductService {
 
-    private ProductRepository productRepository;
-    private SellerRepository sellerRepository;
+    private final ProductRepository productRepository;
+    private final SellerRepository sellerRepository;
+
+    public ProductService(ProductRepository productRepository, SellerRepository sellerRepository) {
+        this.productRepository =productRepository;
+        this.sellerRepository = sellerRepository;
+    }
 
     public List<ProductDto> getProductsBySellerId(int page, int size, Long sellerId){
         List<ProductDto> dto = productRepository.findBySellerId(sellerId, PageRequest.of(page, size)).stream().map(
@@ -28,8 +33,8 @@ public class ProductService {
     }
 
     public void createProduct(ProductDto dto) {
-        Seller seller = sellerRepository.findById(Long.parseLong(dto.getSellerId())).orElseThrow(
-                ()-> new ResourceNotFoundException("Seller not found"));
+        Seller seller = sellerRepository.findById(Long.parseLong(dto.getSellerId())).orElseThrow(()->
+                new ResourceNotFoundException("Seller not found"));
 
         Product product = ProductMapper.toProduct(dto);
         product.setSeller(seller);

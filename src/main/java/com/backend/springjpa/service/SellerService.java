@@ -16,8 +16,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class SellerService {
-    private SellerRepository sellerRepository;
+    private final SellerRepository sellerRepository;
 
+    public SellerService(SellerRepository sellerRepository) {
+        this.sellerRepository = sellerRepository;
+    }
     public void createSeller(SellerDto sellerDto) {
         Seller seller = SellerMapper.toSeller(sellerDto);
         try {

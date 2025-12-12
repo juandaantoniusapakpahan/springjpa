@@ -13,9 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController @RequestMapping("/api/v1/product")
 public class ProductController {
 
-    private ProductService productService;
+    final private ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
     @PostMapping("/add")
     public ResponseEntity<ApiResponse<String>> createProduct(@Valid @RequestBody ProductDto dto) {
+        productService.createProduct(dto);
         return ResponseEntity.ok(ApiResponse.ok("Product added successfully",null, "/product/add"));
     }
 
