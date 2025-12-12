@@ -17,9 +17,12 @@ public class ProductDto {
 
     private String description;
 
+    @NotBlank(message = "Category is required")
     private String category;
     private String createdAt;
     private String updatedAt;
+    @NotBlank(message = "SellerId is required")
+
     private String sellerId;
     private List<ProductVariant> variants;
 
