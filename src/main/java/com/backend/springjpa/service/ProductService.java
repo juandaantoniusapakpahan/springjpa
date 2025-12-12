@@ -11,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -30,8 +29,7 @@ public class ProductService {
 
     public void createProduct(ProductDto dto) {
         Seller seller = sellerRepository.findById(Long.parseLong(dto.getSellerId())).orElseThrow(
-                ()-> new ResourceNotFoundException("Seller not found")
-        );
+                ()-> new ResourceNotFoundException("Seller not found"));
 
         Product product = ProductMapper.toProduct(dto);
         product.setSeller(seller);
