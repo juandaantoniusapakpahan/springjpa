@@ -1,15 +1,19 @@
 package com.backend.springjpa.service;
 
 import com.backend.springjpa.dto.ProductDto;
+import com.backend.springjpa.dto.ProductVariantDto;
 import com.backend.springjpa.entity.Product;
+import com.backend.springjpa.entity.ProductVariant;
 import com.backend.springjpa.entity.Seller;
 import com.backend.springjpa.exception.ResourceNotFoundException;
 import com.backend.springjpa.mapper.ProductMapper;
+import com.backend.springjpa.mapper.ProductVariantMapper;
 import com.backend.springjpa.repository.ProductRepository;
 import com.backend.springjpa.repository.SellerRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -40,4 +44,23 @@ public class ProductService {
         product.setSeller(seller);
         productRepository.save(product);
     }
+
+
+    public List<ProductDto> getProductsByCategory(String category) {
+        List<Product> products = productRepository.findByCategoryContaining(category);
+        List<ProductDto> dtos = new ArrayList<>();
+        for (Product product : products) {
+            ProductDto productDto = ProductMapper.toProductDTO(product);
+            List<ProductVariantDto> variantsDto = new ArrayList<>();
+            for (ProductVariant variant: product.getProductVariants()) {
+                ProductVariantDto variantDto = ProductVariantMapper.toProductVariantDto(variant);
+                variantsDto.add(variantDto);
+            }
+            productDto.setVariants(variantsDto);
+            dtos.add(productDto);
+        }
+        return dtos;
+    }
+
+
 }
