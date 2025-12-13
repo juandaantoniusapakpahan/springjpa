@@ -22,16 +22,16 @@ public class SellerController {
     public SellerController(SellerService sellerService) {
         this.sellerService = sellerService;
     }
-    @PostMapping("/add")
+    @PostMapping("/addSeller")
     public ResponseEntity<ApiResponse<SellerDto>> createSeller(@Valid @RequestBody SellerDto sellerDto) {
         sellerService.createSeller(sellerDto);
-        return ResponseEntity.ok(ApiResponse.ok("Seller berhasil ditambahkan",sellerDto, "/api/v1/sellers/add"));
+        return ResponseEntity.ok(ApiResponse.ok("Seller berhasil ditambahkan",sellerDto, "/addSeller"));
     }
 
     @PostMapping("/getAllSeller")
     public ResponseEntity<ApiResponse<List<SellerDto>>> getSellers(@RequestParam int page, @RequestParam int size) {
         List<SellerDto> sellerDtos = sellerService.getSellers(page, size);
-        return ResponseEntity.ok(ApiResponse.ok("Success",sellerDtos, ".getSellers"));
+        return ResponseEntity.ok(ApiResponse.ok("Success",sellerDtos, "/getAllSeller"));
     }
 
 }

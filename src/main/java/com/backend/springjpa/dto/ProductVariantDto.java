@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ProductVariant {
+public class ProductVariantDto {
     private String id;
     @NotBlank(message = "SKU is required")
     private String sku;
@@ -20,6 +20,8 @@ public class ProductVariant {
     private String stockQty;
 
     private String productId;
+    private String percentage;
+
 
     public String getId() {
         return id;
@@ -53,11 +55,20 @@ public class ProductVariant {
         this.stockQty = stockQty;
     }
 
+
     public String getProductId() {
         return productId;
     }
 
     public void setProductId(String productId) {
         this.productId = productId;
+    }
+
+    public String getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(String percentage) {
+        this.percentage = percentage;
     }
 }
