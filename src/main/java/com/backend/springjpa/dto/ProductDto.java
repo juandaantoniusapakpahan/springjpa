@@ -17,11 +17,14 @@ public class ProductDto {
 
     private String description;
 
+    @NotBlank(message = "Category is required")
     private String category;
     private String createdAt;
     private String updatedAt;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String sellerId;
-    private List<ProductVariant> variants;
+    private List<ProductVariantDto> variants;
 
     public String getId() {
         return id;
@@ -79,11 +82,11 @@ public class ProductDto {
         this.sellerId = sellerId;
     }
 
-    public List<ProductVariant> getVariants() {
+    public List<ProductVariantDto> getVariants() {
         return variants;
     }
 
-    public void setVariants(List<ProductVariant> variants) {
+    public void setVariants(List<ProductVariantDto> variants) {
         this.variants = variants;
     }
 }

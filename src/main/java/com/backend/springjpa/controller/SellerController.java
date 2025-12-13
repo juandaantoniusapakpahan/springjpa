@@ -9,20 +9,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/v1/sellers")
+@RequestMapping("/api/v1/seller")
 public class SellerController {
     private final SellerService sellerService;
 
     public SellerController(SellerService sellerService) {
         this.sellerService = sellerService;
     }
-    @PostMapping("/add")
+    @PostMapping("/addSeller")
     public ResponseEntity<ApiResponse<SellerDto>> createSeller(@Valid @RequestBody SellerDto sellerDto) {
         sellerService.createSeller(sellerDto);
-        return ResponseEntity.ok(ApiResponse.ok("Seller berhasil ditambahkan",sellerDto, "/api/v1/sellers/add"));
+        return ResponseEntity.ok(ApiResponse.ok("Seller berhasil ditambahkan",sellerDto, "/addSeller"));
+    }
+
+    @PostMapping("/getAllSeller")
+    public ResponseEntity<ApiResponse<List<SellerDto>>> getSellers(@RequestParam int page, @RequestParam int size) {
+        List<SellerDto> sellerDtos = sellerService.getSellers(page, size);
+        return ResponseEntity.ok(ApiResponse.ok("Success",sellerDtos, "/getAllSeller"));
     }
 
 }
