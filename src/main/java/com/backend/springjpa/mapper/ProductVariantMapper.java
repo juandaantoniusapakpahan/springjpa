@@ -9,6 +9,7 @@ public class ProductVariantMapper {
     public static ProductVariant toProductVariant(ProductVariantDto dto) {
         ProductVariant productVariant = new ProductVariant();
         productVariant.setSku(dto.getSku());
+        productVariant.setName(dto.getName());
         productVariant.setPrice(new BigDecimal(dto.getPrice()));
         productVariant.setStockQty(Integer.parseInt(dto.getStockQty()));
         return productVariant;
@@ -18,6 +19,7 @@ public class ProductVariantMapper {
         ProductVariantDto dto = new ProductVariantDto();
         dto.setId(String.valueOf(productVariant.getId()));
         dto.setSku(productVariant.getSku());
+        dto.setName(productVariant.getName());
         dto.setPrice(String.valueOf(productVariant.getPrice()));
         dto.setStockQty(String.valueOf(productVariant.getStockQty()));
         dto.setProductId(productVariant.getProduct().getId().toString());

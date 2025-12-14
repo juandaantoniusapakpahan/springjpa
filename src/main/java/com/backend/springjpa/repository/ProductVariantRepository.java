@@ -16,7 +16,7 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
     @Query("""
             UPDATE ProductVariant pv
             SET pv.price = pv.price * (1.0 + :percentage)
-            WHERE pv.product.id = :productId
+            WHERE pv.product.id = :productId and pv.deleted = false
             """)
     int updatePriceByPercentage(@Param("productId") Long productId, @Param("percentage")BigDecimal percentage);
 }

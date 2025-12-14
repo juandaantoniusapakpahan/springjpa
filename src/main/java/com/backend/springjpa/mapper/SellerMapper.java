@@ -16,7 +16,7 @@ public class SellerMapper {
         dto.setId(String.valueOf(entity.getId()));
         dto.setName(entity.getName());
         dto.setEmail(entity.getEmail());
-        dto.setCreatedAt(entity.getCreatedAt().toString());
+        dto.setCreatedAt(entity.getCreatedAt());
         return dto;
     }
 }
