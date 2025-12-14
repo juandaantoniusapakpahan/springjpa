@@ -43,16 +43,9 @@ public class ProductVariantService {
     public int updatePriceByPercentage(ProductVariantDto dto) {
         try {
             BigDecimal pct = new BigDecimal(dto.getPercentage()).divide(BigDecimal.valueOf(100),4, RoundingMode.HALF_UP);
-            int count = productVariantRepository.updatePriceByPercentage(Long.parseLong(dto.getProductId()),pct);
-            if (count < 1) {
-                throw new RuntimeException("not");
-            }
-            return count;
+            return productVariantRepository.updatePriceByPercentage(Long.parseLong(dto.getProductId()),pct);
         } catch (Exception e) {
-            if (e.getMessage().equals("not")){
-                throw new ResourceNotFoundException("Product variant not found");
-            }
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 }

@@ -10,8 +10,8 @@ public class ProductMapper {
         dto.setName(product.getName());
         dto.setCategory(product.getCategory());
         dto.setDescription(product.getDescription());
-        dto.setCreatedAt(product.getCreatedAt());
-        dto.setUpdatedAt(product.getUpdatedAt());
+        dto.setCreatedAt(product.getCreatedAt().toString());
+        dto.setUpdatedAt(product.getUpdatedAt().toString());
         return dto;
     }
 

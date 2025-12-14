@@ -3,9 +3,14 @@ package com.backend.springjpa.controller;
 import com.backend.springjpa.dto.ApiResponse;
 import com.backend.springjpa.dto.SellerDto;
 import com.backend.springjpa.service.SellerService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -27,18 +32,6 @@ public class SellerController {
     public ResponseEntity<ApiResponse<List<SellerDto>>> getSellers(@RequestParam int page, @RequestParam int size) {
         List<SellerDto> sellerDtos = sellerService.getSellers(page, size);
         return ResponseEntity.ok(ApiResponse.ok("Success",sellerDtos, "/getAllSeller"));
-    }
-
-    @PostMapping("/softDeleteSeller/{sellerId}")
-    public ResponseEntity<ApiResponse<String>> softDeleteSeller(@PathVariable Long sellerId) {
-        sellerService.softDeleteSeller(sellerId);
-        return ResponseEntity.ok(ApiResponse.ok("Seller deleted successfully",null, "/softDeleteSeller"));
-    }
-
-    @PostMapping("/activateSeller/{sellerId}")
-    public ResponseEntity<ApiResponse<String>> activateSeller(@PathVariable Long sellerId) {
-        sellerService.activateSeller(sellerId);
-        return ResponseEntity.ok(ApiResponse.ok("Seller activated successfully",null, "/activateSeller"));
     }
 
 }

@@ -10,9 +10,7 @@ import com.backend.springjpa.mapper.ProductMapper;
 import com.backend.springjpa.mapper.ProductVariantMapper;
 import com.backend.springjpa.repository.ProductRepository;
 import com.backend.springjpa.repository.SellerRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,7 +28,7 @@ public class ProductService {
     }
 
     public List<ProductDto> getProductsBySellerId(int page, int size, Long sellerId){
-        List<ProductDto> dto = productRepository.findByDeletedFalseAndSellerId(sellerId, PageRequest.of(page, size)).stream().map(
+        List<ProductDto> dto = productRepository.findBySellerId(sellerId, PageRequest.of(page, size)).stream().map(
                 ProductMapper::toProductDTO).toList();
         if (dto.isEmpty()) {
             throw new ResourceNotFoundException("Product not found");
@@ -49,7 +47,7 @@ public class ProductService {
 
 
     public List<ProductDto> getProductsByCategory(String category) {
-        List<Product> products = productRepository.findByDeletedFalseAndCategoryContaining(category);
+        List<Product> products = productRepository.findByCategoryContaining(category);
         List<ProductDto> dtos = new ArrayList<>();
         for (Product product : products) {
             ProductDto productDto = ProductMapper.toProductDTO(product);
@@ -64,24 +62,5 @@ public class ProductService {
         return dtos;
     }
 
-    public List<ProductDto> getAllProduct(Pageable pageable) {
-        List<ProductDto> dto = productRepository.findByDeletedFalse(pageable).stream().map(ProductMapper::toProductDTO).toList();
-        return dto;
-    }
 
-    @Transactional
-    public void softDeleteProduct(Long productId) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-        product.setDeleted(true);
-        product.getProductVariants().forEach(productVariant -> productVariant.setDeleted(true));
-        productRepository.save(product);
-    }
-
-    @Transactional
-    public void activateProduct(Long productId) {
-        Product product = productRepository.findById(productId).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-        product.setDeleted(false);
-        product.getProductVariants().forEach(productVariant -> productVariant.setDeleted(false));
-        productRepository.save(product);
-    }
 }
