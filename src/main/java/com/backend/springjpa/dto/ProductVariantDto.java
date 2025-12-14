@@ -11,6 +11,9 @@ public class ProductVariantDto {
     @NotBlank(message = "SKU is required")
     private String sku;
 
+    @NotBlank(message = "Name is required")
+    private String name;
+
     @NotBlank(message = "Price is required")
     @Pattern(regexp = "\\d+(\\.\\d+)?", message = "Price must be a number")
     private String price;
@@ -70,5 +73,13 @@ public class ProductVariantDto {
 
     public void setPercentage(String percentage) {
         this.percentage = percentage;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
