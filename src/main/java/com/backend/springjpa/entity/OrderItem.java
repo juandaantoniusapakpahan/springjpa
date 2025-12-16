@@ -2,11 +2,18 @@ package com.backend.springjpa.entity;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import lombok.Builder;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
+import java.security.PrivateKey;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "order_items")
+@Builder
 public class OrderItem {
 
     @Id
@@ -17,11 +24,23 @@ public class OrderItem {
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_variant_id")
+    private ProductVariant productVariant;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
     @Column(nullable = false)
+    @Min(1)
     private Integer qty;
 
     @Column(nullable = false)
-    private BigDecimal priceAtOrder;
+    private BigDecimal priceAmount;
+
+    private BigDecimal price;
 
     public Long getId() {
         return id;
@@ -39,6 +58,14 @@ public class OrderItem {
         this.order = order;
     }
 
+    public ProductVariant getProductVariant() {
+        return productVariant;
+    }
+
+    public void setProductVariant(ProductVariant productVariant) {
+        this.productVariant = productVariant;
+    }
+
     public Integer getQty() {
         return qty;
     }
@@ -47,11 +74,19 @@ public class OrderItem {
         this.qty = qty;
     }
 
-    public BigDecimal getPriceAtOrder() {
-        return priceAtOrder;
+    public BigDecimal getPriceAmount() {
+        return priceAmount;
     }
 
-    public void setPriceAtOrder(BigDecimal priceAtOrder) {
-        this.priceAtOrder = priceAtOrder;
+    public void setPriceAmount(BigDecimal priceAmount) {
+        this.priceAmount = priceAmount;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }

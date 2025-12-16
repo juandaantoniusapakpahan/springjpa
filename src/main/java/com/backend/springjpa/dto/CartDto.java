@@ -3,6 +3,7 @@ package com.backend.springjpa.dto;
 import com.backend.springjpa.entity.ProductVariant;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CartDto {
@@ -12,6 +13,7 @@ public class CartDto {
     private String productVariantId;
 
     @NotBlank(message = "Quantity is required")
+    @Pattern(regexp = "^[1-9][0-9]*$", message = "Quantity must be greater than 0")
     private String quantity;
 
     @NotBlank(message = "User ID is required")

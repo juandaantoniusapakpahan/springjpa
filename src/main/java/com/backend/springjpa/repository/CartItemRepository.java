@@ -18,4 +18,5 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
             where ci.cart.id = :cartId
             """)
     List<CartItem> findByCartId(Long cartId);
+    List<CartItem> findAllByIdInAndCartId(List<Long> ids, Long cardId);
 }
