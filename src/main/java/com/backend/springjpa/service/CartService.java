@@ -2,6 +2,8 @@ package com.backend.springjpa.service;
 
 
 import com.backend.springjpa.dto.CartDto;
+import com.backend.springjpa.dto.CartGroupDto;
+import com.backend.springjpa.dto.CartItemDto;
 import com.backend.springjpa.dto.ProductDto;
 import com.backend.springjpa.dto.ProductVariantDto;
 import com.backend.springjpa.entity.Cart;
@@ -10,6 +12,8 @@ import com.backend.springjpa.entity.Product;
 import com.backend.springjpa.entity.ProductVariant;
 import com.backend.springjpa.exception.BadRequestException;
 import com.backend.springjpa.exception.ResourceNotFoundException;
+import com.backend.springjpa.mapper.CartGroupMapper;
+import com.backend.springjpa.mapper.CartItemMapper;
 import com.backend.springjpa.mapper.ProductMapper;
 import com.backend.springjpa.mapper.ProductVariantMapper;
 import com.backend.springjpa.repository.CartItemRepository;
@@ -18,6 +22,7 @@ import com.backend.springjpa.repository.ProductVariantRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -82,19 +87,22 @@ public class CartService {
         }
     }
 
-    public List<ProductDto> getCartGroupedByCategory(Long userId) {
+    public List<CartGroupDto> getCartGroupedByCategory(Long userId) {
         Cart cart = cartRepository.findByUserId(userId).orElseThrow(()-> new ResourceNotFoundException("Cart not found"));
         List<CartItem> cartItems = cartItemRepository.findByCartId(cart.getId());
 
-        Map<Long, ProductDto> map = new LinkedHashMap<>();
+        Map<Long, CartGroupDto> map = new LinkedHashMap<>();
 
         for (CartItem ci: cartItems) {
             Product product = ci.getProductVariant().getProduct();
-            ProductDto productDto = map.computeIfAbsent(
+            CartGroupDto cartDto = map.computeIfAbsent(
                     product.getId(),
-                    id-> ProductMapper.toProductDTO(product));
-            ProductVariantDto productVariantDto = ProductVariantMapper.toProductVariantDto(ci.getProductVariant());
-            productDto.getVariants().add(productVariantDto);
+                    id-> CartGroupMapper.toCartGroupDto(product));
+            CartItemDto itemDto = CartItemMapper.toCartItemDto(ci);
+            itemDto.setPriceAmount(ci.getProductVariant().getPrice().multiply(BigDecimal.valueOf(ci.getQuantity())).toString());
+            ProductVariantDto variantDto = ProductVariantMapper.toProductVariantDto(ci.getProductVariant());
+            itemDto.setProductVariantDto(variantDto);
+            cartDto.getItemDto().add(itemDto);
         }
         return new ArrayList<>(map.values());
     }

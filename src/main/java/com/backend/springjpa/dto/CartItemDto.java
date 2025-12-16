@@ -1,17 +1,19 @@
 package com.backend.springjpa.dto;
 
 
+import com.backend.springjpa.entity.ProductVariant;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CartItemDto {
 
     private String id;
-    private String productVariantId;
-    private String sku;
-    private String name;
     private String priceAmount;
     private String quantity;
+
+    @JsonProperty("product_variant")
+    private ProductVariantDto productVariantDto;
 
     public String getId() {
         return id;
@@ -19,22 +21,6 @@ public class CartItemDto {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getSku() {
-        return sku;
-    }
-
-    public void setSku(String sku) {
-        this.sku = sku;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getPriceAmount() {
@@ -53,11 +39,11 @@ public class CartItemDto {
         this.quantity = quantity;
     }
 
-    public String getProductVariantId() {
-        return productVariantId;
+    public ProductVariantDto getProductVariantDto() {
+        return productVariantDto;
     }
 
-    public void setProductVariantId(String productVariantId) {
-        this.productVariantId = productVariantId;
+    public void setProductVariantDto(ProductVariantDto productVariantDto) {
+        this.productVariantDto = productVariantDto;
     }
 }

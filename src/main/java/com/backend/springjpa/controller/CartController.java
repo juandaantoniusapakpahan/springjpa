@@ -2,6 +2,7 @@ package com.backend.springjpa.controller;
 
 import com.backend.springjpa.dto.ApiResponse;
 import com.backend.springjpa.dto.CartDto;
+import com.backend.springjpa.dto.CartGroupDto;
 import com.backend.springjpa.dto.ProductDto;
 import com.backend.springjpa.service.CartService;
 import jakarta.validation.Valid;
@@ -37,8 +38,8 @@ public class CartController {
     }
 
     @PostMapping("/getCartGroupedByCategory/{userId}")
-    public ResponseEntity<ApiResponse<List<ProductDto>>> getCartGroupedByCategory(@PathVariable Long userId) {
-        List<ProductDto> dto = cartService.getCartGroupedByCategory(userId);
+    public ResponseEntity<ApiResponse<List<CartGroupDto>>> getCartGroupedByCategory(@PathVariable Long userId) {
+        List<CartGroupDto> dto = cartService.getCartGroupedByCategory(userId);
         return ResponseEntity.ok(ApiResponse.ok("Success",dto, "/getCartGroupedByCategory"));
     }
 }
