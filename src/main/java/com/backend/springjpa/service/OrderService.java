@@ -1,6 +1,7 @@
 package com.backend.springjpa.service;
 
 
+import com.backend.springjpa.dto.CheckoutItemDto;
 import com.backend.springjpa.dto.CheckoutRequestDto;
 import com.backend.springjpa.entity.CartItem;
 import com.backend.springjpa.entity.Order;
@@ -11,6 +12,7 @@ import com.backend.springjpa.exception.BadRequestException;
 import com.backend.springjpa.exception.ResourceNotFoundException;
 import com.backend.springjpa.repository.CartItemRepository;
 import com.backend.springjpa.repository.OrderRepository;
+import com.backend.springjpa.repository.ProductVariantRepository;
 import com.backend.springjpa.util.OrderStatus;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -25,12 +27,69 @@ public class OrderService {
     private final OrderRepository orderRepository;
 
     private final CartItemRepository cartItemRepository;
+    private final ProductVariantRepository productVariantRepository;
     public OrderService(OrderRepository orderRepository,
-                        CartItemRepository cartItemRepository
+                        CartItemRepository cartItemRepository,
+                        ProductVariantRepository productVariantRepository
                         ) {
         this.orderRepository = orderRepository;
         this.cartItemRepository = cartItemRepository;
+        this.productVariantRepository = productVariantRepository;
     }
+
+    @Transactional
+    public void checkout(CheckoutRequestDto dto) {
+
+        Long cartId = Long.parseLong(dto.getCartId());
+
+        Order order = Order.builder()
+                .userId(Long.parseLong(dto.getUserId()))
+                .status(OrderStatus.CREATED)
+                .build();
+
+        BigDecimal total = BigDecimal.ZERO;
+        List<OrderItem> orderItems = new ArrayList<>();
+
+        for (CheckoutItemDto requestDto : dto.getItems()) {
+
+            Long cartItemId = Long.parseLong(requestDto.getCartItemId());
+
+            CartItem item = cartItemRepository
+                    .findByIdAndCartId(cartItemId, cartId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Item not found"));
+
+            ProductVariant variant = item.getProductVariant();
+
+            int updated = productVariantRepository
+                    .decreaseStock(variant.getId(), item.getQuantity());
+
+            if (updated == 0) {
+                throw new BadRequestException(
+                        "Stock not enough for variant " + variant.getName()
+                );
+            }
+
+            BigDecimal itemTotal =
+                    variant.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+
+            OrderItem orderItem = OrderItem.builder()
+                    .qty(item.getQuantity())
+                    .productVariant(variant) // OK untuk relasi
+                    .price(variant.getPrice())
+                    .priceAmount(itemTotal)
+                    .order(order)
+                    .build();
+
+            orderItems.add(orderItem);
+            total = total.add(itemTotal);
+        }
+
+        order.setOrderItems(orderItems);
+        order.setTotalAmount(total);
+
+        orderRepository.save(order);
+    }
+
 
     @Transactional
     public void checkOut(CheckoutRequestDto requestDto) {
