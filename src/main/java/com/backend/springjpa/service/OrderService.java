@@ -3,10 +3,12 @@ package com.backend.springjpa.service;
 
 import com.backend.springjpa.dto.CheckoutItemDto;
 import com.backend.springjpa.dto.CheckoutRequestDto;
+import com.backend.springjpa.entity.Cart;
 import com.backend.springjpa.entity.CartItem;
 import com.backend.springjpa.entity.Order;
 
 import com.backend.springjpa.entity.OrderItem;
+import com.backend.springjpa.entity.Payment;
 import com.backend.springjpa.entity.ProductVariant;
 import com.backend.springjpa.exception.BadRequestException;
 import com.backend.springjpa.exception.ResourceNotFoundException;
@@ -14,10 +16,12 @@ import com.backend.springjpa.repository.CartItemRepository;
 import com.backend.springjpa.repository.OrderRepository;
 import com.backend.springjpa.repository.ProductVariantRepository;
 import com.backend.springjpa.util.OrderStatus;
+import com.backend.springjpa.util.PaymentStatus;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +53,7 @@ public class OrderService {
 
         BigDecimal total = BigDecimal.ZERO;
         List<OrderItem> orderItems = new ArrayList<>();
+        List<CartItem> cartItems = new ArrayList<>();
 
         for (CheckoutItemDto requestDto : dto.getItems()) {
 
@@ -57,6 +62,7 @@ public class OrderService {
             CartItem item = cartItemRepository
                     .findByIdAndCartId(cartItemId, cartId)
                     .orElseThrow(() -> new ResourceNotFoundException("Item not found"));
+            cartItems.add(item);
 
             ProductVariant variant = item.getProductVariant();
 
@@ -86,8 +92,15 @@ public class OrderService {
 
         order.setOrderItems(orderItems);
         order.setTotalAmount(total);
-
+        Payment payment = Payment.builder()
+                .status(PaymentStatus.WAITING)
+                .expiredAt(LocalDateTime.now().plusMinutes(5))
+                .order(order)
+                .build();
+        order.setPayment(payment);
         orderRepository.save(order);
+        cartItemRepository.deleteAll(cartItems);
+
     }
 
 
@@ -156,8 +169,15 @@ public class OrderService {
         orderRepository.save(order);
 
         cartItemRepository.deleteAll(cartItems);
+    }
 
-        //return order;
+
+    @Transactional
+    public void cancelOrder(Order order) {
+        order.getOrderItems().forEach(item ->
+                item.getProductVariant().setStockQty(item.getProductVariant().getStockQty() + item.getQty()));
+        order.setStatus(OrderStatus.CANCELLED);
+        orderRepository.save(order);
     }
 
 }

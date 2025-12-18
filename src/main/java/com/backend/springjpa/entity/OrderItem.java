@@ -3,7 +3,9 @@ package com.backend.springjpa.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,6 +16,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "order_items")
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class OrderItem {
 
     @Id

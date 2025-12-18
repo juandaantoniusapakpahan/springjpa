@@ -1,8 +1,11 @@
 package com.backend.springjpa.entity;
 
 import com.backend.springjpa.util.OrderStatus;
+import com.backend.springjpa.util.PaymentStatus;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.w3c.dom.stylesheets.LinkStyle;
@@ -14,6 +17,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class Order {
 
@@ -30,6 +35,9 @@ public class Order {
     @Column(nullable = false)
     private BigDecimal totalAmount;
 
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Payment payment;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<OrderItem> orderItems;
 
@@ -37,6 +45,7 @@ public class Order {
     private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
 
     public Long getId() {
         return id;
@@ -76,5 +85,29 @@ public class Order {
 
     public void setOrderItems(List<OrderItem> orderItems) {
         this.orderItems = orderItems;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
