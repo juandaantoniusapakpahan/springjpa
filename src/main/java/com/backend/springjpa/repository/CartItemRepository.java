@@ -15,9 +15,7 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
             Select ci from CartItem ci
             join fetch ci.productVariant pv
             join fetch pv.product p
-            where ci.cart.id = :cartId order by ci.createdAt desc
+            where ci.cart.id = :cartId
             """)
     List<CartItem> findByCartId(Long cartId);
-    List<CartItem> findAllByIdInAndCartId(List<Long> ids, Long cartId);
-    Optional<CartItem> findByIdAndCartId(Long id, Long cartId);
 }

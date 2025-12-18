@@ -4,8 +4,6 @@ package com.backend.springjpa.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,8 +12,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "products")
-@AllArgsConstructor
-@NoArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,10 +41,6 @@ public class Product {
 
     @Column(nullable = false)
     private boolean deleted;
-
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-
-
 
     public Long getId() {
         return id;

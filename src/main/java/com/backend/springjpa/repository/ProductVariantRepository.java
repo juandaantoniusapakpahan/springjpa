@@ -19,13 +19,4 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
             WHERE pv.product.id = :productId and pv.deleted = false
             """)
     int updatePriceByPercentage(@Param("productId") Long productId, @Param("percentage")BigDecimal percentage);
-
-    @Modifying
-    @Query("""
-            Update ProductVariant pv
-            SET pv.stockQty = pv.stockQty - :qty
-            WHERE pv.id = :id AND pv.stockQty >= :qty
-            """)
-    int decreaseStock(Long id, int qty);
-
 }
