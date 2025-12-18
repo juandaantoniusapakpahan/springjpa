@@ -38,7 +38,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void checkout(CheckoutRequestDto dto) {
+    public void checkoutRaceCondition(CheckoutRequestDto dto) {
 
         Long cartId = Long.parseLong(dto.getCartId());
 

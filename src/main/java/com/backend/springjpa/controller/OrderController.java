@@ -26,4 +26,10 @@ public class OrderController {
         orderService.checkOut(dto);
         return ResponseEntity.ok(ApiResponse.ok("Success", null,"/createOrder"));
     }
+
+    @PostMapping("/createOrder/raceCondition")
+    public ResponseEntity<ApiResponse<String>> createOrderRaceCondition(@Valid @RequestBody CheckoutRequestDto dto) {
+        orderService.checkoutRaceCondition(dto);
+                return ResponseEntity.ok(ApiResponse.ok("Success", null, "/createOrder/raceCondition"));
+    }
 }
