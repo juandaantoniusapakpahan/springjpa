@@ -12,9 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "product_variants")
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "product_variants")
 public class ProductVariant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

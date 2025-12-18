@@ -5,8 +5,6 @@ import com.backend.springjpa.entity.ProductVariant;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -26,9 +24,7 @@ public class ProductDto {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String sellerId;
-
-    @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<ProductVariantDto> variants = new ArrayList<>();
+    private List<ProductVariantDto> variants;
 
     public String getId() {
         return id;

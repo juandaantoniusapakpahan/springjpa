@@ -1,15 +1,9 @@
 package com.backend.springjpa.dto;
 
 
-import com.backend.springjpa.entity.Product;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SellerDto {
@@ -22,8 +16,6 @@ public class SellerDto {
     private String email;
 
     private String createdAt;
-
-    private List<Product> products = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -55,13 +47,5 @@ public class SellerDto {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
     }
 }

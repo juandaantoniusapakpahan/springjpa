@@ -1,6 +1,5 @@
 package com.backend.springjpa.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -11,9 +10,7 @@ public class ApiResponse<T> {
     private String message;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
-
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-    private LocalDateTime timestamp;
+    private String timestamp;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String path;
@@ -24,7 +21,7 @@ public class ApiResponse<T> {
         this.status = status;
         this.message = message;
         this.data = data;
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = LocalDateTime.now().toString();
         this.path = path;
     }
 
@@ -51,18 +48,12 @@ public class ApiResponse<T> {
     public String getStatus() { return status; }
     public String getMessage() { return message; }
     public T getData() { return data; }
+    public String getTimestamp() { return timestamp; }
     public String getPath() { return path; }
     public void setStatus(String status) { this.status = status; }
     public void setMessage(String message) { this.message = message; }
     public void setData(T data) { this.data = data; }
+    public void setTimestamp(String timestamp) { this.timestamp = timestamp; }
     public void setPath(String path) { this.path = path; }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
 }
 

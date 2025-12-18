@@ -16,8 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "products")
-@AllArgsConstructor
-@NoArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,10 +42,6 @@ public class Product {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
-
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-
 
 
     public Long getId() {
