@@ -21,8 +21,7 @@ public class SellerDto {
     @Email(message = "Email is invalid")
     private String email;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createdAt;
+    private String createdAt;
 
     private List<Product> products = new ArrayList<>();
 
@@ -50,11 +49,11 @@ public class SellerDto {
         this.email = email;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 

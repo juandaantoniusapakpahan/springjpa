@@ -23,9 +23,6 @@ public class ProductVariant {
     @Column(nullable = false, unique = true)
     private String sku;
 
-    @Column(nullable = false)
-    private String name;
-
     @Column(precision = 19, scale = 2)
     private BigDecimal price;
 
@@ -41,25 +38,6 @@ public class ProductVariant {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
-    @Column(nullable = false)
-    private boolean deleted;
-
-    public boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public Long getId() {
         return id;

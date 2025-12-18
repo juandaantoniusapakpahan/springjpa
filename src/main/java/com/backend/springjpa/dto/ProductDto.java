@@ -2,7 +2,6 @@ package com.backend.springjpa.dto;
 
 
 import com.backend.springjpa.entity.ProductVariant;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 
@@ -22,13 +21,8 @@ public class ProductDto {
 
     @NotBlank(message = "Category is required")
     private String category;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-
-    private LocalDateTime createdAt;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-
-    private LocalDateTime updatedAt;
+    private String createdAt;
+    private String updatedAt;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String sellerId;
@@ -68,19 +62,19 @@ public class ProductDto {
         this.category = category;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public String getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
 
