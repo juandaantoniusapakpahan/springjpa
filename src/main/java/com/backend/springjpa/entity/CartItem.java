@@ -3,36 +3,39 @@ package com.backend.springjpa.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Table(name = "cart_items")
 @Entity
-@Table(name = "product_variants")
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductVariant {
+public class CartItem {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String sku;
-
-    @Column(precision = 19, scale = 2)
-    private BigDecimal price;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id", nullable = false)
+    @JsonBackReference
+    private Cart cart;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_variant_id", nullable = false)
     @JsonBackReference
-    private Product product;
-    private Integer stockQty;
+    private ProductVariant productVariant;
 
-    @Column(updatable = false)
+    @Column(nullable = false)
+    @Min(1)
+    private Integer quantity;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
@@ -47,36 +50,28 @@ public class ProductVariant {
         this.id = id;
     }
 
-    public String getSku() {
-        return sku;
+    public Cart getCart() {
+        return cart;
     }
 
-    public void setSku(String sku) {
-        this.sku = sku;
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public ProductVariant getProductVariant() {
+        return productVariant;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setProductVariant(ProductVariant productVariant) {
+        this.productVariant = productVariant;
     }
 
-    public Product getProduct() {
-        return product;
+    public Integer getQuantity() {
+        return quantity;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
-    public Integer getStockQty() {
-        return stockQty;
-    }
-
-    public void setStockQty(Integer stockQty) {
-        this.stockQty = stockQty;
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
     public LocalDateTime getCreatedAt() {
