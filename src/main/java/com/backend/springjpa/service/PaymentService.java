@@ -1,15 +1,21 @@
 package com.backend.springjpa.service;
 
+import com.backend.springjpa.dto.PaymentDto;
 import com.backend.springjpa.entity.Payment;
+import com.backend.springjpa.exception.BadRequestException;
+import com.backend.springjpa.exception.ResourceNotFoundException;
 import com.backend.springjpa.repository.OrderRepository;
 import com.backend.springjpa.repository.PaymentRepository;
+import com.backend.springjpa.util.OrderStatus;
 import com.backend.springjpa.util.PaymentStatus;
 import jakarta.transaction.Transactional;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.text.DateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -21,6 +27,24 @@ public class PaymentService {
     public PaymentService(PaymentRepository paymentRepository, OrderService orderService) {
         this.paymentRepository = paymentRepository;
         this.orderService = orderService;
+    }
+
+    @Transactional
+    public void createPayment(PaymentDto dto) {
+        Long id = Long.parseLong(dto.getPaymentId());
+        Payment payment = paymentRepository.findByIdAndStatus(id, PaymentStatus.WAITING).orElseThrow(()-> new ResourceNotFoundException("Payment not found"));
+
+        if (!PaymentStatus.PAID.toString().equals(dto.getPaymentStatus())){
+            payment.setStatus(PaymentStatus.EXPIRED);
+            orderService.cancelOrder(payment.getOrder());
+        } else {
+            payment.setStatus(PaymentStatus.PAID);
+            DateTimeFormatter formatter =DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            LocalDateTime localDateTime = LocalDateTime.parse(dto.getTimeStamp(), formatter);
+            payment.setPaidAt(localDateTime);
+            payment.getOrder().setStatus(OrderStatus.COMPLETED);
+            paymentRepository.save(payment);
+        }
     }
 
     @Scheduled(fixedRate = 60000)

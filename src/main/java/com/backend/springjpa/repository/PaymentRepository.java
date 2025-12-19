@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
@@ -19,4 +20,5 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
             WHERE p.status = :status AND p.expiredAt < :now
             """)
     List<Payment> findExpiredWaitingPayments(@Param("status") PaymentStatus status, @Param("now") LocalDateTime now);
+    Optional<Payment> findByIdAndStatus (Long id, PaymentStatus status);
 }

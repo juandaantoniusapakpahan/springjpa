@@ -51,6 +51,9 @@ public class Payment {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @Column()
+    private LocalDateTime paidAt;
+
     public Long getId() {
         return id;
     }
@@ -97,5 +100,13 @@ public class Payment {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public LocalDateTime getPaidAt() {
+        return paidAt;
+    }
+
+    public void setPaidAt(LocalDateTime paidAt) {
+        this.paidAt = paidAt;
     }
 }
