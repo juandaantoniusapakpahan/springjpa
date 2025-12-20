@@ -4,15 +4,12 @@ import com.backend.springjpa.dto.PaymentDto;
 import com.backend.springjpa.entity.Payment;
 import com.backend.springjpa.exception.BadRequestException;
 import com.backend.springjpa.exception.ResourceNotFoundException;
-import com.backend.springjpa.mapper.PaymentMapper;
 import com.backend.springjpa.repository.OrderRepository;
 import com.backend.springjpa.repository.PaymentRepository;
 import com.backend.springjpa.util.OrderStatus;
 import com.backend.springjpa.util.PaymentStatus;
 import jakarta.transaction.Transactional;
 import org.aspectj.weaver.ast.Or;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -48,10 +45,6 @@ public class PaymentService {
             payment.getOrder().setStatus(OrderStatus.COMPLETED);
             paymentRepository.save(payment);
         }
-    }
-
-    public List<PaymentDto> getAllPayment(PaymentStatus status, Pageable pageable) {
-        return paymentRepository.findByStatus(status, pageable).stream().map((PaymentMapper::toPaymentDto)).toList();
     }
 
     @Scheduled(fixedRate = 60000)
