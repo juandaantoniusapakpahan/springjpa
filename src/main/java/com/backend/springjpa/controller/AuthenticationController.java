@@ -6,10 +6,13 @@ import com.backend.springjpa.dto.RegisterUserDto;
 import com.backend.springjpa.entity.User;
 import com.backend.springjpa.service.AuthenticationService;
 import com.backend.springjpa.service.JwtService;
+import com.backend.springjpa.service.VerificationTokenService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/auth")
@@ -18,10 +21,13 @@ public class AuthenticationController {
     private final JwtService jwtService;
 
     private final AuthenticationService authenticationService;
+    private final VerificationTokenService tokenService;
 
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
+    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService,
+                                    VerificationTokenService tokenService) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
+        this.tokenService = tokenService;
     }
 
     @PostMapping("/signup")
@@ -44,5 +50,11 @@ public class AuthenticationController {
                 .build();
 
         return ResponseEntity.ok(loginResponse);
+    }
+
+    @GetMapping("/verify")
+    public String verifyToken(@RequestParam String token) {
+        tokenService.findToken(token);
+        return "Email verified successfully. You can login now.";
     }
 }
