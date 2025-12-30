@@ -1,6 +1,8 @@
 package com.backend.springjpa.repository;
 
 import com.backend.springjpa.dto.DailySalesReportDto;
+import com.backend.springjpa.dto.SellerSalesReport;
+import com.backend.springjpa.dto.TopProductVariantReport;
 import com.backend.springjpa.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,4 +28,29 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             @Param("start")LocalDateTime start,
             @Param("end") LocalDateTime end
             );
+
+    @Query(value = """
+            SELECT s.id AS sellerId, s.name as sellerName,  count(DISTINCT o.id) as totalOrder,
+             SUM(oi.price * oi.qty) as totalRevenue FROM orders o
+            JOIN order_items oi ON oi.order_id = o.id
+            JOIN product_variants pv ON pv.id = oi.product_variant_id
+            JOIN products p ON p.id = pv.product_id
+            JOIN sellers s ON s.id = p.seller_id
+            WHERE o.status = 'PAID'
+            AND o.created_at BETWEEN :start AND :end
+            GROUP BY s.id, s.name ORDER BY totalRevenue DESC
+            """, nativeQuery = true)
+    List<SellerSalesReport> getSalesPerSeller(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+    @Query(value = """
+            SELECT pv.id as variantId, pv.sku as sku,
+             pv.name as productName, SUM(oi.qty) as totalSold,
+             SUM(oi.qty * oi.price) as totalRevenue FROM orders o
+            JOIN order_items oi ON oi.order_id = o.id
+            JOIN product_variants pv ON pv.id = oi.product_variant_id
+            where o.status = 'PAID' AND o.created_at BETWEEN :start AND :end
+            GROUP BY pv.id
+            ORDER BY totalSold DESC
+            """, nativeQuery = true)
+    List<TopProductVariantReport> getTopSellingVariants(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 }

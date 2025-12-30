@@ -4,6 +4,8 @@ package com.backend.springjpa.service;
 import com.backend.springjpa.dto.CheckoutItemDto;
 import com.backend.springjpa.dto.CheckoutRequestDto;
 import com.backend.springjpa.dto.DailySalesReportDto;
+import com.backend.springjpa.dto.SellerSalesReport;
+import com.backend.springjpa.dto.TopProductVariantReport;
 import com.backend.springjpa.entity.Cart;
 import com.backend.springjpa.entity.CartItem;
 import com.backend.springjpa.entity.Order;
@@ -187,4 +189,13 @@ public class OrderService {
     public List<DailySalesReportDto> getDailySalesReport(LocalDate startDate, LocalDate endDate) {
         return orderRepository.getDailySalesReport(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX));
     }
+
+    public List<SellerSalesReport> getSalesPerSeller(LocalDate start, LocalDate end) {
+        return orderRepository.getSalesPerSeller(start.atStartOfDay(), end.atTime(LocalTime.MAX));
+    }
+
+    public List<TopProductVariantReport> getTopSellingVariants(LocalDate start, LocalDate end) {
+        return orderRepository.getTopSellingVariants(start.atStartOfDay(), end.atTime(LocalTime.MAX));
+    }
+
 }
