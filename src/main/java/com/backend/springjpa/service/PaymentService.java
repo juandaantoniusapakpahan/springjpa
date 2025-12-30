@@ -40,12 +40,13 @@ public class PaymentService {
         if (!PaymentStatus.PAID.toString().equals(dto.getPaymentStatus())){
             payment.setStatus(PaymentStatus.EXPIRED);
             orderService.cancelOrder(payment.getOrder());
+            throw new BadRequestException("Internal Error, please try again");
         } else {
             payment.setStatus(PaymentStatus.PAID);
             DateTimeFormatter formatter =DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             LocalDateTime localDateTime = LocalDateTime.parse(dto.getTimeStamp(), formatter);
             payment.setPaidAt(localDateTime);
-            payment.getOrder().setStatus(OrderStatus.COMPLETED);
+            payment.getOrder().setStatus(OrderStatus.PAID);
             paymentRepository.save(payment);
         }
     }

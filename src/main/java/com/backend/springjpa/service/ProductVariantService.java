@@ -10,11 +10,13 @@ import com.backend.springjpa.repository.ProductRepository;
 import com.backend.springjpa.repository.ProductVariantRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
+import java.util.List;
 
 @Service
 public class ProductVariantService {
@@ -54,5 +56,12 @@ public class ProductVariantService {
             }
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public List<ProductVariantDto> getAllProductVariant(Pageable pageable) {
+        return productVariantRepository.findAll(pageable)
+                .stream()
+                .map(ProductVariantMapper::toProductVariantDto)
+                .toList();
     }
 }
