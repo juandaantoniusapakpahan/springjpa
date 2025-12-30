@@ -5,8 +5,11 @@ import com.backend.springjpa.dto.ApiResponse;
 import com.backend.springjpa.dto.ProductVariantDto;
 import com.backend.springjpa.service.ProductVariantService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/product-variant")
@@ -33,6 +36,12 @@ public class ProductVariantController {
     }
 
 
-
-
+    @PostMapping("/getAll")
+    public ResponseEntity<ApiResponse<List<ProductVariantDto>>> getAll(Pageable pageable) {
+        return ResponseEntity
+                .ok(ApiResponse
+                        .ok("Success",
+                                productVariantService.getAllProductVariant(pageable),
+                                "/getAll"));
+    }
 }

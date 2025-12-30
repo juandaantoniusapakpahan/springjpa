@@ -3,6 +3,7 @@ package com.backend.springjpa.service;
 
 import com.backend.springjpa.dto.CheckoutItemDto;
 import com.backend.springjpa.dto.CheckoutRequestDto;
+import com.backend.springjpa.dto.DailySalesReportDto;
 import com.backend.springjpa.entity.Cart;
 import com.backend.springjpa.entity.CartItem;
 import com.backend.springjpa.entity.Order;
@@ -21,7 +22,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -180,4 +183,8 @@ public class OrderService {
         orderRepository.save(order);
     }
 
+
+    public List<DailySalesReportDto> getDailySalesReport(LocalDate startDate, LocalDate endDate) {
+        return orderRepository.getDailySalesReport(startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX));
+    }
 }

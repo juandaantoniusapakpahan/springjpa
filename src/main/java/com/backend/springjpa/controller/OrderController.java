@@ -2,6 +2,7 @@ package com.backend.springjpa.controller;
 
 import com.backend.springjpa.dto.ApiResponse;
 import com.backend.springjpa.dto.CheckoutRequestDto;
+import com.backend.springjpa.dto.DailySalesReportDto;
 import com.backend.springjpa.entity.Order;
 import com.backend.springjpa.service.OrderService;
 import jakarta.validation.Valid;
@@ -9,7 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/order")
@@ -31,5 +36,10 @@ public class OrderController {
     public ResponseEntity<ApiResponse<String>> createOrderRaceCondition(@Valid @RequestBody CheckoutRequestDto dto) {
         orderService.checkoutRaceCondition(dto);
                 return ResponseEntity.ok(ApiResponse.ok("Success", null, "/createOrder/raceCondition"));
+    }
+
+    @PostMapping("/getDailySalesReport")
+    public ResponseEntity<ApiResponse<List<DailySalesReportDto>>> getDailySalesReport(@RequestParam LocalDate start, @RequestParam LocalDate end) {
+        return ResponseEntity.ok(ApiResponse.ok("Success", orderService.getDailySalesReport(start, end), "/getDailySalesReport"));
     }
 }
