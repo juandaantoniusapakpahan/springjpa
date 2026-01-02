@@ -5,6 +5,7 @@ import com.backend.springjpa.dto.CheckoutRequestDto;
 import com.backend.springjpa.dto.DailySalesReportDto;
 import com.backend.springjpa.dto.SellerSalesReport;
 import com.backend.springjpa.dto.TopProductVariantReport;
+import com.backend.springjpa.dto.UserOrderSummaryReport;
 import com.backend.springjpa.entity.Order;
 import com.backend.springjpa.service.OrderService;
 import jakarta.validation.Valid;
@@ -54,5 +55,11 @@ public class OrderController {
     @PostMapping("/getTopSellingVariants")
     public ResponseEntity<ApiResponse<List<TopProductVariantReport>>> getTopSellingVariants(@RequestParam LocalDate start, @RequestParam LocalDate end) {
         return ResponseEntity.ok(ApiResponse.ok("Success", orderService.getTopSellingVariants(start, end), "/getTopSellingVariants"));
+    }
+
+    @PostMapping("/getUserOrderSummary")
+    public ResponseEntity<ApiResponse<UserOrderSummaryReport>> getUserOrderSummary(@RequestParam Long userId, @RequestParam LocalDate start, @RequestParam LocalDate end)
+    {
+        return ResponseEntity.ok(ApiResponse.ok("Success", orderService.getUserOrderSummary(userId, start, end),"/getUserOrderSummary"));
     }
 }

@@ -6,6 +6,7 @@ import com.backend.springjpa.dto.CheckoutRequestDto;
 import com.backend.springjpa.dto.DailySalesReportDto;
 import com.backend.springjpa.dto.SellerSalesReport;
 import com.backend.springjpa.dto.TopProductVariantReport;
+import com.backend.springjpa.dto.UserOrderSummaryReport;
 import com.backend.springjpa.entity.Cart;
 import com.backend.springjpa.entity.CartItem;
 import com.backend.springjpa.entity.Order;
@@ -196,6 +197,10 @@ public class OrderService {
 
     public List<TopProductVariantReport> getTopSellingVariants(LocalDate start, LocalDate end) {
         return orderRepository.getTopSellingVariants(start.atStartOfDay(), end.atTime(LocalTime.MAX));
+    }
+
+    public UserOrderSummaryReport getUserOrderSummary(Long userId, LocalDate start, LocalDate end) {
+        return orderRepository.getUserOrderSummary(userId, start.atStartOfDay(),end.atTime(LocalTime.MAX));
     }
 
 }
