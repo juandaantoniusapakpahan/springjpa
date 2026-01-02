@@ -3,6 +3,7 @@ package com.backend.springjpa.repository;
 import com.backend.springjpa.dto.DailySalesReportDto;
 import com.backend.springjpa.dto.SellerSalesReport;
 import com.backend.springjpa.dto.TopProductVariantReport;
+import com.backend.springjpa.dto.UserOrderSummaryReport;
 import com.backend.springjpa.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -53,4 +54,22 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             ORDER BY totalSold DESC
             """, nativeQuery = true)
     List<TopProductVariantReport> getTopSellingVariants(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+    @Query(value = """
+            SELECT u.id AS userId,
+            COUNT(DISTINCT o.id) AS totalOrder,
+            SUM(oi.price * oi.qty) AS totalSpent,
+            MAX(o.created_at) as lastOrderDate FROM users u
+            JOIN orders o ON o.user_id = u.id
+            JOIN order_items oi ON oi.order_id = o.id
+            WHERE o.status = 'PAID'
+            AND u.id = :userId
+            AND o.created_at BETWEEN :start AND :end
+            GROUP BY u.id
+            """, nativeQuery = true)
+    UserOrderSummaryReport getUserOrderSummary(
+            @Param("userId") Long userId,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
 }
