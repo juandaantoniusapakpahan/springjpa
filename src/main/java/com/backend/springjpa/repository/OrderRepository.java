@@ -1,10 +1,8 @@
 package com.backend.springjpa.repository;
 
-import com.backend.springjpa.dto.DailySalesReportDto;
-import com.backend.springjpa.dto.SellerSalesReport;
-import com.backend.springjpa.dto.TopProductVariantReport;
-import com.backend.springjpa.dto.UserOrderSummaryReport;
+import com.backend.springjpa.dto.*;
 import com.backend.springjpa.entity.Order;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -68,6 +66,27 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             GROUP BY u.id
             """, nativeQuery = true)
     UserOrderSummaryReport getUserOrderSummary(
+            @Param("userId") Long userId,
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
+
+    @Query(value = """
+            SELECT p.id as productId,
+            p.name as productName,
+            SUM(oi.qty) as totalQuantity,
+            SUM(oi.qty * oi.price) as totalSpent FROM orders o
+            JOIN order_items oi ON oi.order_id = o.id
+            JOIN product_variants pv ON pv.id = oi.product_variant_id
+            JOIN products p ON p.id = pv.product_id
+            WHERE o.user_id = :userId
+            AND o.status = 'PAID'
+            AND o.created_at BETWEEN :start AND :end
+            GROUP BY p.id, p.name
+            ORDER BY totalQuantity DESC
+            LIMIT 1
+            """, nativeQuery = true)
+    UserMostPurchasedProductReport getUserMostPurchasedProduct(
             @Param("userId") Long userId,
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end
