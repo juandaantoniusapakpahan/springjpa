@@ -1,11 +1,6 @@
 package com.backend.springjpa.controller;
 
-import com.backend.springjpa.dto.ApiResponse;
-import com.backend.springjpa.dto.CheckoutRequestDto;
-import com.backend.springjpa.dto.DailySalesReportDto;
-import com.backend.springjpa.dto.SellerSalesReport;
-import com.backend.springjpa.dto.TopProductVariantReport;
-import com.backend.springjpa.dto.UserOrderSummaryReport;
+import com.backend.springjpa.dto.*;
 import com.backend.springjpa.entity.Order;
 import com.backend.springjpa.service.OrderService;
 import jakarta.validation.Valid;
@@ -61,5 +56,10 @@ public class OrderController {
     public ResponseEntity<ApiResponse<UserOrderSummaryReport>> getUserOrderSummary(@RequestParam Long userId, @RequestParam LocalDate start, @RequestParam LocalDate end)
     {
         return ResponseEntity.ok(ApiResponse.ok("Success", orderService.getUserOrderSummary(userId, start, end),"/getUserOrderSummary"));
+    }
+
+    @PostMapping("/getMostPurchasedProduct")
+    public ResponseEntity<ApiResponse<UserMostPurchasedProductReport>> getUserMostPurchasedProduct(@RequestParam Long userId, @RequestParam LocalDate start, @RequestParam LocalDate end) {
+        return ResponseEntity.ok(ApiResponse.ok("Success", orderService.getUserMostPurchasedProduct(userId, start, end), "/getMostPurchasedProduct"));
     }
 }
