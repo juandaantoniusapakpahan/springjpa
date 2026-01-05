@@ -62,4 +62,10 @@ public class OrderController {
     public ResponseEntity<ApiResponse<UserMostPurchasedProductReport>> getUserMostPurchasedProduct(@RequestParam Long userId, @RequestParam LocalDate start, @RequestParam LocalDate end) {
         return ResponseEntity.ok(ApiResponse.ok("Success", orderService.getUserMostPurchasedProduct(userId, start, end), "/getMostPurchasedProduct"));
     }
+
+    @PostMapping("/sales/category")
+    public ResponseEntity<ApiResponse<List<RevenuePerCategoryReport>>> getRevenuePerCategory (@RequestParam LocalDate start,
+                                                                                              @RequestParam LocalDate end) {
+        return ResponseEntity.ok(ApiResponse.ok("Success", orderService.getRevenuePerCategory(start, end),"/sales/category"));
+    }
 }

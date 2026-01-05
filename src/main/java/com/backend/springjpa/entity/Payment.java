@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -39,6 +40,10 @@ public class Payment {
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
+
+    private String method;
+
+    private BigDecimal amount;
 
     @Column(nullable = false)
     private LocalDateTime expiredAt;
@@ -108,5 +113,21 @@ public class Payment {
 
     public void setPaidAt(LocalDateTime paidAt) {
         this.paidAt = paidAt;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 }

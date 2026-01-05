@@ -95,6 +95,8 @@ public class OrderService {
         order.setTotalAmount(total);
         Payment payment = Payment.builder()
                 .status(PaymentStatus.WAITING)
+                .method(dto.getPaymentMethod().toUpperCase())
+                .amount(total)
                 .expiredAt(LocalDateTime.now().plusMinutes(5))
                 .order(order)
                 .build();
@@ -200,6 +202,10 @@ public class OrderService {
 
     public UserMostPurchasedProductReport getUserMostPurchasedProduct(Long userId, LocalDate start, LocalDate end) {
         return orderRepository.getUserMostPurchasedProduct(userId, start.atStartOfDay(), end.atTime(LocalTime.MAX));
+    }
+
+    public List<RevenuePerCategoryReport> getRevenuePerCategory(LocalDate start, LocalDate end) {
+        return orderRepository.getRevenuePerCategory(start.atStartOfDay(), end.atTime(LocalTime.MAX));
     }
 
 }

@@ -11,6 +11,8 @@ public class CheckoutRequestDto {
     private String userId;
     @NotNull
     private String cartId;
+    @NotNull
+    private String paymentMethod;
 
     @NotEmpty
     private List<CheckoutItemDto> items;
@@ -37,5 +39,13 @@ public class CheckoutRequestDto {
 
     public void setCartId(String cartId) {
         this.cartId = cartId;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }
