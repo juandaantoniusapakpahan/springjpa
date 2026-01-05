@@ -91,4 +91,22 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end
     );
+
+    @Query(value = """
+            Select p.category as category,
+             COUNT(DISTINCT o.id) as totalOrder,
+              SUM(oi.qty * oi.price) as totalRevenue FROM orders o
+            JOIN order_items oi ON oi.order_id = o.id
+            JOIN product_variants pv ON pv.id = oi.product_variant_id
+            JOIN products p ON p.id = pv.product_id
+            where o.status = 'PAID'
+            AND o.created_at BETWEEN :start AND :end
+            GROUP BY p.category
+            ORDER BY totalRevenue DESC
+            """, nativeQuery = true)
+    List<RevenuePerCategoryReport> getRevenuePerCategory(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
+
 }

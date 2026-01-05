@@ -1,6 +1,7 @@
 package com.backend.springjpa.service;
 
 import com.backend.springjpa.dto.PaymentDto;
+import com.backend.springjpa.dto.PaymentMethodSummaryReport;
 import com.backend.springjpa.entity.Payment;
 import com.backend.springjpa.exception.BadRequestException;
 import com.backend.springjpa.exception.ResourceNotFoundException;
@@ -17,7 +18,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.text.DateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -53,6 +56,10 @@ public class PaymentService {
 
     public List<PaymentDto> getAllPayment(PaymentStatus status, Pageable pageable) {
         return paymentRepository.findByStatus(status, pageable).stream().map((PaymentMapper::toPaymentDto)).toList();
+    }
+
+    public List<PaymentMethodSummaryReport> getPaymentMethodSummary(LocalDate start, LocalDate end) {
+        return paymentRepository.getPaymentMethodSummary(start.atStartOfDay(), end.atTime(LocalTime.MAX));
     }
 
     @Scheduled(fixedRate = 60000)
