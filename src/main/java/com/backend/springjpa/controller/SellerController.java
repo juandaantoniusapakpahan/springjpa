@@ -1,12 +1,14 @@
 package com.backend.springjpa.controller;
 
 import com.backend.springjpa.dto.ApiResponse;
+import com.backend.springjpa.dto.SellerBestSellingProductReport;
 import com.backend.springjpa.dto.SellerDto;
 import com.backend.springjpa.service.SellerService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -39,6 +41,13 @@ public class SellerController {
     public ResponseEntity<ApiResponse<String>> activateSeller(@PathVariable Long sellerId) {
         sellerService.activateSeller(sellerId);
         return ResponseEntity.ok(ApiResponse.ok("Seller activated successfully",null, "/activateSeller"));
+    }
+
+    @PostMapping("/best-selling-product")
+    public ResponseEntity<ApiResponse<SellerBestSellingProductReport>> getSellerBestSellingProduct(@RequestParam Long sellerId,
+                                                                                                   @RequestParam LocalDate start,
+                                                                                                   @RequestParam LocalDate end) {
+        return ResponseEntity.ok(ApiResponse.ok("Success", sellerService.getSellerBestSellingProduct(sellerId, start,end), "/best-selling-product" ));
     }
 
 }

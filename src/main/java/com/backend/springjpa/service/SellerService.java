@@ -1,5 +1,6 @@
 package com.backend.springjpa.service;
 
+import com.backend.springjpa.dto.SellerBestSellingProductReport;
 import com.backend.springjpa.dto.SellerDto;
 import com.backend.springjpa.entity.Seller;
 import com.backend.springjpa.exception.ConflictException;
@@ -13,6 +14,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.awt.print.Pageable;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,5 +56,9 @@ public class SellerService {
         seller.getProducts().forEach(product -> product.setDeleted(false));
         seller.getProducts().forEach(product -> product.getProductVariants().forEach(productVariant -> productVariant.setDeleted(false)));
         sellerRepository.save(seller);
+    }
+
+    public SellerBestSellingProductReport getSellerBestSellingProduct(Long sellerId, LocalDate start, LocalDate end) {
+        return sellerRepository.getSellerBestSellingProduct(sellerId, start.atStartOfDay(), end.atTime(LocalTime.MAX));
     }
 }
