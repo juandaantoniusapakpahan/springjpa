@@ -208,4 +208,7 @@ public class OrderService {
         return orderRepository.getRevenuePerCategory(start.atStartOfDay(), end.atTime(LocalTime.MAX));
     }
 
+    public List<DailyConversionRateView> getDailyConversionRate(LocalDate start, LocalDate end) {
+        return orderRepository.getDailyConversionRate(start.atStartOfDay(), end.atTime(LocalTime.MAX));
+    }
 }
