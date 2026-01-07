@@ -4,6 +4,7 @@ package com.backend.springjpa.controller;
 import com.backend.springjpa.dto.ApiResponse;
 import com.backend.springjpa.dto.PaymentDto;
 import com.backend.springjpa.dto.PaymentMethodSummaryReport;
+import com.backend.springjpa.dto.PaymentStatusSummaryReport;
 import com.backend.springjpa.service.PaymentService;
 import com.backend.springjpa.util.PaymentStatus;
 import jakarta.validation.Valid;
@@ -46,6 +47,14 @@ public class PaymentController {
     public ResponseEntity<ApiResponse<List<PaymentMethodSummaryReport>>> getPaymentMethodSummary(
             @RequestParam("start")LocalDate start, @RequestParam("end") LocalDate end){
         return ResponseEntity.ok(ApiResponse.ok("Success", paymentService.getPaymentMethodSummary(start, end),"/method-summary"));
+    }
+
+    @PostMapping("/status-summary")
+    public ResponseEntity<ApiResponse<List<PaymentStatusSummaryReport>>> getPaymentStatusSummary(
+            @RequestParam("start") LocalDate start,
+            @RequestParam("end") LocalDate end
+    ) {
+        return ResponseEntity.ok(ApiResponse.ok("Success", paymentService.getPaymentStatusSummary(start, end), "/status-summary"));
     }
 
 }

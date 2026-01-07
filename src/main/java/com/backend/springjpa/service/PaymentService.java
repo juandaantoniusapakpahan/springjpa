@@ -2,6 +2,7 @@ package com.backend.springjpa.service;
 
 import com.backend.springjpa.dto.PaymentDto;
 import com.backend.springjpa.dto.PaymentMethodSummaryReport;
+import com.backend.springjpa.dto.PaymentStatusSummaryReport;
 import com.backend.springjpa.entity.Payment;
 import com.backend.springjpa.exception.BadRequestException;
 import com.backend.springjpa.exception.ResourceNotFoundException;
@@ -60,6 +61,10 @@ public class PaymentService {
 
     public List<PaymentMethodSummaryReport> getPaymentMethodSummary(LocalDate start, LocalDate end) {
         return paymentRepository.getPaymentMethodSummary(start.atStartOfDay(), end.atTime(LocalTime.MAX));
+    }
+
+    public List<PaymentStatusSummaryReport> getPaymentStatusSummary(LocalDate start, LocalDate end) {
+        return paymentRepository.getPaymentStatusSummary(start.atStartOfDay(), end.atTime(LocalTime.MAX));
     }
 
     @Scheduled(fixedRate = 60000)

@@ -1,6 +1,7 @@
 package com.backend.springjpa.repository;
 
 import com.backend.springjpa.dto.PaymentMethodSummaryReport;
+import com.backend.springjpa.dto.PaymentStatusSummaryReport;
 import com.backend.springjpa.entity.Payment;
 import com.backend.springjpa.util.PaymentStatus;
 import org.springframework.data.domain.PageRequest;
@@ -37,4 +38,18 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
             """, nativeQuery = true)
     List<PaymentMethodSummaryReport> getPaymentMethodSummary(@Param("start") LocalDateTime start,
                                                              @Param("end") LocalDateTime end);
+    @Query(value = """
+            SELECT
+            p.status as status,
+            COUNT(p.status) as totalTransaction,
+            SUM(o.total_amount) as totalAmount FROM payments p
+            JOIN orders o ON o.id = p.order_id
+            WHERE p.created_at BETWEEN :start AND :end
+            GROUP BY p.status
+            ORDER BY totalTransaction DESC
+            """, nativeQuery = true)
+    List<PaymentStatusSummaryReport> getPaymentStatusSummary(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
 }
