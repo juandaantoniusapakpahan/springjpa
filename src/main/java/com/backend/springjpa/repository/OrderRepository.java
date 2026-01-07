@@ -109,4 +109,18 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             @Param("end") LocalDateTime end
     );
 
+    @Query(value = """
+            SELECT DATE(o.created_at) AS date,
+            COUNT(o.id) AS totalOrder,
+            SUM(CASE WHEN o.status = 'PAID' THEN 1 ELSE 0 END) as totalPaid,
+            ROUND(SUM(CASE WHEN o.status = 'PAID' THEN 1 ELSE 0 END) * 100.0 / COUNT(o.id), 2) AS conversionRate
+            FROM orders o
+            WHERE o.created_at BETWEEN :start AND :end
+            GROUP BY DATE(o.created_at)
+            ORDER BY DATE(o.created_at)
+            """, nativeQuery = true)
+    List<DailyConversionRateView> getDailyConversionRate(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
 }

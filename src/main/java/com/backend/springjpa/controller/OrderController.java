@@ -68,4 +68,11 @@ public class OrderController {
                                                                                               @RequestParam LocalDate end) {
         return ResponseEntity.ok(ApiResponse.ok("Success", orderService.getRevenuePerCategory(start, end),"/sales/category"));
     }
+
+    @PostMapping("/conversion-rate/daily")
+    public ResponseEntity<ApiResponse<List<DailyConversionRateView>>> getDailyConversionRate(
+            @RequestParam("start") LocalDate start, @RequestParam("end") LocalDate end
+    ) {
+        return ResponseEntity.ok(ApiResponse.ok("Success", orderService.getDailyConversionRate(start, end), "/conversion-rate/daily"));
+    }
 }
