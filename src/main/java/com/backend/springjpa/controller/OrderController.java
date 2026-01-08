@@ -85,4 +85,12 @@ public class OrderController {
         return ResponseEntity.ok(ApiResponse.ok("Success", orderService.getRepeatBuyerReportWithRate(start, end
         , minOrder),"/repeat-buyer"));
     }
+
+    @PostMapping("/aov")
+    public ResponseEntity<ApiResponse<AverageOrderValueReport>> getAverageOrderValue(
+            @RequestParam("start") LocalDate start,
+            @RequestParam("end") LocalDate end
+    ) {
+        return ResponseEntity.ok(ApiResponse.ok("Success", orderService.getAverageOrderValue(start, end),"/aov"));
+    }
 }

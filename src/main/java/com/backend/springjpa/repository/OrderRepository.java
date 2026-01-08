@@ -145,4 +145,18 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             @Param("minOrder") int minOrder
     );
 
+
+    @Query(value = """
+            SELECT SUM(o.total_amount) AS totalRevenue,
+            COUNT(o.id) AS totalOrder,
+            ROUND(SUM(o.total_amount) / COUNT(o.id),2) AS averageOrderValue
+            FROM orders o
+            WHERE o.status = 'PAID' AND o.created_at BETWEEN :start AND :end
+            """, nativeQuery = true)
+    AverageOrderValueReport getAverageOrderValue(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
+
+
 }
