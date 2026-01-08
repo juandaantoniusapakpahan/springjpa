@@ -211,4 +211,8 @@ public class OrderService {
     public List<DailyConversionRateView> getDailyConversionRate(LocalDate start, LocalDate end) {
         return orderRepository.getDailyConversionRate(start.atStartOfDay(), end.atTime(LocalTime.MAX));
     }
+
+    public RepeatBuyerReport getRepeatBuyerReportWithRate(LocalDate start, LocalDate end, int minOrder) {
+        return orderRepository.getRepeatBuyerReportWithRate(start.atStartOfDay(), end.atTime(LocalTime.MAX), minOrder);
+    }
 }

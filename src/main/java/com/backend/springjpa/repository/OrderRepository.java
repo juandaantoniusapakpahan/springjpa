@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -123,4 +124,25 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end
     );
+
+
+    @Query(value = """
+            SELECT COUNT(*) as totalBuyer,
+            SUM(CASE WHEN t.order_count >= :minOrder THEN 1 ELSE 0 END) as repeatBuyer,
+            ROUND(
+                    SUM(CASE WHEN t.order_count >= :minOrder THEN 1 ELSE 0 END) * 100.0 / COUNT(*),
+                    2
+                ) AS repeatRate
+            FROM (SELECT o.user_id, COUNT(o.id) AS order_count
+            FROM orders o
+            WHERE o.status = 'PAID'
+            AND o.created_at BETWEEN :start AND :end
+            GROUP BY o.user_id) as t
+            """, nativeQuery = true)
+    RepeatBuyerReport getRepeatBuyerReportWithRate(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end,
+            @Param("minOrder") int minOrder
+    );
+
 }

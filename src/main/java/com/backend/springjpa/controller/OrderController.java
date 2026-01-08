@@ -75,4 +75,14 @@ public class OrderController {
     ) {
         return ResponseEntity.ok(ApiResponse.ok("Success", orderService.getDailyConversionRate(start, end), "/conversion-rate/daily"));
     }
+
+    @PostMapping("/repeat-buyer")
+    public ResponseEntity<ApiResponse<RepeatBuyerReport>> getRepeatBuyer(
+            @RequestParam ("minOrder") int minOrder,
+            @RequestParam("start") LocalDate start,
+            @RequestParam("end") LocalDate end
+    ) {
+        return ResponseEntity.ok(ApiResponse.ok("Success", orderService.getRepeatBuyerReportWithRate(start, end
+        , minOrder),"/repeat-buyer"));
+    }
 }
