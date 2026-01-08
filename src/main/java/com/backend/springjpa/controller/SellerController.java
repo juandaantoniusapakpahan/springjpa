@@ -3,6 +3,7 @@ package com.backend.springjpa.controller;
 import com.backend.springjpa.dto.ApiResponse;
 import com.backend.springjpa.dto.SellerBestSellingProductReport;
 import com.backend.springjpa.dto.SellerDto;
+import com.backend.springjpa.dto.SellerPerformanceReport;
 import com.backend.springjpa.service.SellerService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +49,14 @@ public class SellerController {
                                                                                                    @RequestParam LocalDate start,
                                                                                                    @RequestParam LocalDate end) {
         return ResponseEntity.ok(ApiResponse.ok("Success", sellerService.getSellerBestSellingProduct(sellerId, start,end), "/best-selling-product" ));
+    }
+
+    @PostMapping("/seller-ranking")
+    public ResponseEntity<ApiResponse<List<SellerPerformanceReport>>> getSellerRanking(
+            @RequestParam("start") LocalDate start,
+            @RequestParam("end") LocalDate end) {
+
+        return ResponseEntity.ok(ApiResponse.ok("Success", sellerService.getSellerPerformanceRanking(start, end),"/seller-ranking"));
     }
 
 }

@@ -2,6 +2,7 @@ package com.backend.springjpa.service;
 
 import com.backend.springjpa.dto.SellerBestSellingProductReport;
 import com.backend.springjpa.dto.SellerDto;
+import com.backend.springjpa.dto.SellerPerformanceReport;
 import com.backend.springjpa.entity.Seller;
 import com.backend.springjpa.exception.ConflictException;
 import com.backend.springjpa.exception.ResourceNotFoundException;
@@ -60,5 +61,9 @@ public class SellerService {
 
     public SellerBestSellingProductReport getSellerBestSellingProduct(Long sellerId, LocalDate start, LocalDate end) {
         return sellerRepository.getSellerBestSellingProduct(sellerId, start.atStartOfDay(), end.atTime(LocalTime.MAX));
+    }
+
+    public List<SellerPerformanceReport> getSellerPerformanceRanking(LocalDate start, LocalDate end) {
+        return sellerRepository.getSellerPerformanceRanking(start.atStartOfDay(), end.atTime(LocalTime.MAX));
     }
 }

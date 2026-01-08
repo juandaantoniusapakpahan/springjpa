@@ -215,4 +215,9 @@ public class OrderService {
     public RepeatBuyerReport getRepeatBuyerReportWithRate(LocalDate start, LocalDate end, int minOrder) {
         return orderRepository.getRepeatBuyerReportWithRate(start.atStartOfDay(), end.atTime(LocalTime.MAX), minOrder);
     }
+
+    public AverageOrderValueReport getAverageOrderValue(LocalDate start, LocalDate end) {
+        return orderRepository.getAverageOrderValue(start.atStartOfDay(), end.atTime(LocalTime.MAX));
+    }
+
 }
