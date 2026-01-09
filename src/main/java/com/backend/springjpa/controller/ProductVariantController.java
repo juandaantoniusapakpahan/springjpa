@@ -3,6 +3,7 @@ package com.backend.springjpa.controller;
 
 import com.backend.springjpa.dto.ApiResponse;
 import com.backend.springjpa.dto.ProductVariantDto;
+import com.backend.springjpa.dto.StockRiskReport;
 import com.backend.springjpa.service.ProductVariantService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
@@ -43,5 +44,13 @@ public class ProductVariantController {
                         .ok("Success",
                                 productVariantService.getAllProductVariant(pageable),
                                 "/getAll"));
+    }
+
+    @PostMapping("/stock-risk")
+    public ResponseEntity<ApiResponse<List<StockRiskReport>>> getStockRisk(
+            @RequestParam(defaultValue = "10") int highRisk,
+            @RequestParam(defaultValue = "15") int mediumRisk
+    ) {
+        return ResponseEntity.ok(ApiResponse.ok("Success", productVariantService.getStockRisk(highRisk, mediumRisk),"/stock-risk"));
     }
 }

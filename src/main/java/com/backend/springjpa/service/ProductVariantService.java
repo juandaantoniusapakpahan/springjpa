@@ -1,6 +1,7 @@
 package com.backend.springjpa.service;
 
 import com.backend.springjpa.dto.ProductVariantDto;
+import com.backend.springjpa.dto.StockRiskReport;
 import com.backend.springjpa.entity.Product;
 import com.backend.springjpa.entity.ProductVariant;
 import com.backend.springjpa.exception.ConflictException;
@@ -63,5 +64,9 @@ public class ProductVariantService {
                 .stream()
                 .map(ProductVariantMapper::toProductVariantDto)
                 .toList();
+    }
+
+    public List<StockRiskReport> getStockRisk(int highRisk, int mediumRisk) {
+        return productVariantRepository.getStockRiskReport(highRisk, mediumRisk);
     }
 }
