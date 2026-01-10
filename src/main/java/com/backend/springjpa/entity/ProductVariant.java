@@ -2,6 +2,7 @@ package com.backend.springjpa.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "product_variants")
@@ -33,6 +36,11 @@ public class ProductVariant {
     @JoinColumn(name = "product_id")
     @JsonBackReference
     private Product product;
+
+    @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL,fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonIgnore
+    private List<Review> reviews = new ArrayList<>();
+
     private Integer stockQty;
 
     @Column(updatable = false)

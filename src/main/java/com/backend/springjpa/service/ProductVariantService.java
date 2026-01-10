@@ -69,4 +69,9 @@ public class ProductVariantService {
     public List<StockRiskReport> getStockRisk(int highRisk, int mediumRisk) {
         return productVariantRepository.getStockRiskReport(highRisk, mediumRisk);
     }
+
+    public ProductVariant getProductVariantById(Long id) {
+        return productVariantRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product variant not found"));
+    }
 }
