@@ -6,7 +6,11 @@ import com.backend.springjpa.entity.ProductVariant;
 import com.backend.springjpa.entity.Review;
 import com.backend.springjpa.entity.User;
 import com.backend.springjpa.repository.ReviewRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ReviewService {
@@ -21,6 +25,7 @@ public class ReviewService {
         this.reviewRepository = reviewRepository;
     }
 
+    @Transactional
     public void upsertReview(ReviewDto reviewDto) {
         Long userId = Long.parseLong(reviewDto.getUserId());
         Long productVariantId = Long.parseLong(reviewDto.getProductVariantId());
@@ -36,5 +41,23 @@ public class ReviewService {
         review.setComment(reviewDto.getComment());
 
         reviewRepository.save(review);
+    }
+
+    @Transactional
+    public void upsertReviewPaidOrder(List<List<Long>> userAndVariantId) {
+        List<Review> reviews = new ArrayList<>();
+        for (List<Long> ids : userAndVariantId) {
+            Long userId = ids.get(0);
+            Long productVariantId = ids.get(1);
+            User user = userService.getUserById(userId);
+            ProductVariant productVariant = productVariantService.getProductVariantById(productVariantId);
+
+            Review review = reviewRepository.findByUserIdAndProductVariantId(userId, productVariantId).orElseGet(Review::new);
+            review.setUser(user);
+            review.setProductVariant(productVariant);
+            review.setRating(0);
+            review.setComment("");
+        }
+        reviewRepository.saveAll(reviews);
     }
 }

@@ -3,6 +3,7 @@ package com.backend.springjpa.service;
 import com.backend.springjpa.dto.PaymentDto;
 import com.backend.springjpa.dto.PaymentMethodSummaryReport;
 import com.backend.springjpa.dto.PaymentStatusSummaryReport;
+import com.backend.springjpa.entity.OrderItem;
 import com.backend.springjpa.entity.Payment;
 import com.backend.springjpa.exception.BadRequestException;
 import com.backend.springjpa.exception.ResourceNotFoundException;
@@ -23,17 +24,25 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class PaymentService {
 
     private final PaymentRepository paymentRepository;
-
     private final OrderService orderService;
-    public PaymentService(PaymentRepository paymentRepository, OrderService orderService) {
+    private final ReviewService reviewService;
+    private final OrderItemService orderItemService;
+
+    public PaymentService(PaymentRepository paymentRepository,
+                          OrderService orderService,
+                          ReviewService reviewService,
+                          OrderItemService orderItemService) {
         this.paymentRepository = paymentRepository;
         this.orderService = orderService;
+        this.reviewService = reviewService;
+        this.orderItemService = orderItemService;
     }
 
     @Transactional
@@ -52,6 +61,17 @@ public class PaymentService {
             payment.setPaidAt(localDateTime);
             payment.getOrder().setStatus(OrderStatus.PAID);
             paymentRepository.save(payment);
+
+            List<List<Long>> ids = new ArrayList<>();
+            List<OrderItem> orderItems = orderItemService.getOrderItemByOrderId(payment.getOrder().getId());
+            Long userId = payment.getOrder().getUserId();
+            orderItems.forEach(orderItem -> {
+                List<Long> userVariantId = new ArrayList<>();
+                userVariantId.add(userId);
+                userVariantId.add(orderItem.getProductVariant().getId());
+                ids.add(userVariantId);
+            });
+            reviewService.upsertReviewPaidOrder(ids);
         }
     }
 
