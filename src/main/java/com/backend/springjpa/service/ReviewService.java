@@ -57,6 +57,7 @@ public class ReviewService {
             review.setProductVariant(productVariant);
             review.setRating(0);
             review.setComment("");
+            reviews.add(review);
         }
         reviewRepository.saveAll(reviews);
     }
