@@ -12,6 +12,7 @@ import com.backend.springjpa.repository.ReviewRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -52,17 +53,17 @@ public class ReviewService {
     }
 
     @Transactional
-    public void upsertReviewPaidOrder(List<List<Long>> userAndVariantId) {
+    public void upsertReviewPaidOrder(List<long[]> userAndVariantOrderItemId) {
         List<Review> reviews = new ArrayList<>();
-        for (List<Long> ids : userAndVariantId) {
-            Long orderItemId = ids.get(0);
-            Long userId = ids.get(1);
-            Long productVariantId = ids.get(2);
+        for (long[] ids : userAndVariantOrderItemId) {
+            Long orderItemId = ids[0];
+            Long userId = ids[1];
+            Long productVariantId = ids[2];
 
+            Review review = reviewRepository.findByOrderItemId(orderItemId).orElseGet(Review::new);
             OrderItem orderItem = orderItemService.getByOrderItemId(orderItemId);
             User user = userService.getUserById(userId);
             ProductVariant productVariant = productVariantService.getProductVariantById(productVariantId);
-            Review review = reviewRepository.findByUserIdAndProductVariantId(userId, productVariantId).orElseGet(Review::new);
 
             review.setOrderItem(orderItem);
             review.setUser(user);
@@ -74,5 +75,11 @@ public class ReviewService {
             review.setExpiredAt(LocalDateTime.now().plusDays(expirationTime));
         }
         reviewRepository.saveAll(reviews);
+    }
+
+    @Scheduled(fixedRateString = "${review.scheduler.review-non-updated}")
+    @Transactional
+    public void setRateNonUpdated() {
+        reviewRepository.updateNonUpdatedReview(LocalDateTime.now());
     }
 }

@@ -38,9 +38,13 @@ security:
 
 review:
   expiration-time: 7
+  scheduler:
+    review-non-updated: 600000
 
 payment:
   expiration-time: 5
+  scheduler:
+    payment-expired: 300000
 
 
 
