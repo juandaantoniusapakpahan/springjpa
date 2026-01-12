@@ -14,6 +14,7 @@ import com.backend.springjpa.util.OrderStatus;
 import com.backend.springjpa.util.PaymentStatus;
 import jakarta.transaction.Transactional;
 import org.aspectj.weaver.ast.Or;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -62,14 +63,14 @@ public class PaymentService {
             payment.getOrder().setStatus(OrderStatus.PAID);
             paymentRepository.save(payment);
 
-            List<List<Long>> ids = new ArrayList<>();
+            List<long[]> ids = new ArrayList<>();
             List<OrderItem> orderItems = orderItemService.getOrderItemByOrderId(payment.getOrder().getId());
             Long userId = payment.getOrder().getUserId();
             orderItems.forEach(orderItem -> {
-                List<Long> userVariantOrderItemId = new ArrayList<>();
-                userVariantOrderItemId.add(orderItem.getId());
-                userVariantOrderItemId.add(userId);
-                userVariantOrderItemId.add(orderItem.getProductVariant().getId());
+                long[] userVariantOrderItemId = new long[3];
+                userVariantOrderItemId[0] = (orderItem.getId());
+                userVariantOrderItemId[1] = (userId);
+                userVariantOrderItemId[2] = (orderItem.getProductVariant().getId());
                 ids.add(userVariantOrderItemId);
             });
             reviewService.upsertReviewPaidOrder(ids);
@@ -88,7 +89,7 @@ public class PaymentService {
         return paymentRepository.getPaymentStatusSummary(start.atStartOfDay(), end.atTime(LocalTime.MAX));
     }
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRateString = "${payment.scheduler.payment-expired}")
     @Transactional
     public void expiredPayments() {
         List<Payment> payments = paymentRepository.findExpiredWaitingPayments(PaymentStatus.WAITING,LocalDateTime.now());
@@ -96,6 +97,5 @@ public class PaymentService {
             payment.setStatus(PaymentStatus.EXPIRED);
             orderService.cancelOrder(payment.getOrder());
         }
-
     }
 }
