@@ -1,6 +1,7 @@
 package com.backend.springjpa.service;
 
 import com.backend.springjpa.entity.OrderItem;
+import com.backend.springjpa.exception.ResourceNotFoundException;
 import com.backend.springjpa.repository.OrderItemRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,5 +17,9 @@ public class OrderItemService {
 
     public List<OrderItem> getOrderItemByOrderId(Long orderId) {
        return orderItemRepository.findByOrderId(orderId);
+    }
+
+    public OrderItem getByOrderItemId(Long id) {
+       return orderItemRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Order item not found"));
     }
 }

@@ -66,10 +66,11 @@ public class PaymentService {
             List<OrderItem> orderItems = orderItemService.getOrderItemByOrderId(payment.getOrder().getId());
             Long userId = payment.getOrder().getUserId();
             orderItems.forEach(orderItem -> {
-                List<Long> userVariantId = new ArrayList<>();
-                userVariantId.add(userId);
-                userVariantId.add(orderItem.getProductVariant().getId());
-                ids.add(userVariantId);
+                List<Long> userVariantOrderItemId = new ArrayList<>();
+                userVariantOrderItemId.add(orderItem.getId());
+                userVariantOrderItemId.add(userId);
+                userVariantOrderItemId.add(orderItem.getProductVariant().getId());
+                ids.add(userVariantOrderItemId);
             });
             reviewService.upsertReviewPaidOrder(ids);
         }

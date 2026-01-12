@@ -17,6 +17,7 @@ import com.backend.springjpa.repository.ProductVariantRepository;
 import com.backend.springjpa.util.OrderStatus;
 import com.backend.springjpa.util.PaymentStatus;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -33,6 +34,9 @@ public class OrderService {
 
     private final CartItemRepository cartItemRepository;
     private final ProductVariantRepository productVariantRepository;
+
+    @Value("${payment.expiration-time}")
+    private Long expirationTime;
     public OrderService(OrderRepository orderRepository,
                         CartItemRepository cartItemRepository,
                         ProductVariantRepository productVariantRepository
@@ -97,7 +101,7 @@ public class OrderService {
                 .status(PaymentStatus.WAITING)
                 .method(dto.getPaymentMethod().toUpperCase())
                 .amount(total)
-                .expiredAt(LocalDateTime.now().plusMinutes(5))
+                .expiredAt(LocalDateTime.now().plusMinutes(expirationTime))
                 .order(order)
                 .build();
         order.setPayment(payment);
