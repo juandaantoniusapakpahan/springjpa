@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "reviews",
-uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_variant_id"}))
+uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_variant_id","order_item_id"}))
 @Setter @Getter
 @AllArgsConstructor @NoArgsConstructor
 @Builder
@@ -29,11 +29,19 @@ public class Review {
     @JoinColumn(name = "product_variant_id", nullable = false)
     private ProductVariant productVariant;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_item_id", nullable = false)
+    private OrderItem orderItem;
+
     @Column(nullable = false)
     private int rating;
 
     @Column(columnDefinition = "TEXT")
     private String comment;
+
+    private boolean updated;
+
+    private LocalDateTime expiredAt;
 
     @Column(updatable = false)
     @CreationTimestamp

@@ -11,10 +11,14 @@ import lombok.Setter;
 @Setter @Getter
 public class ReviewDto {
 
-    @NotBlank(message = "User ID is required")
     private String userId;
 
-    @NotBlank(message = "Product Variant Id is required")
+    @NotBlank(message = "Review id is required")
+    private String reviewId;
+
+    @NotBlank(message = "Order item id is required")
+    private String orderItemId;
+
     private String productVariantId;
 
     @NotBlank(message = "Rating is required")
