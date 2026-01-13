@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -22,4 +23,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             UPDATE reviews set updated = true, rating = 5 WHERE updated = false AND expired_at <= :now
             """, nativeQuery = true)
     void updateNonUpdatedReview(@Param("now") LocalDateTime now);
+
+    List<Review> findByProductVariantId(Long id);
 }

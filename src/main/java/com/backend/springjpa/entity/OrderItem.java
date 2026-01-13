@@ -2,6 +2,7 @@ package com.backend.springjpa.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -34,7 +35,7 @@ public class OrderItem {
     private ProductVariant productVariant;
 
     @OneToOne(mappedBy = "orderItem", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JsonBackReference
+    @JsonManagedReference
     private Review review;
 
     @CreationTimestamp
