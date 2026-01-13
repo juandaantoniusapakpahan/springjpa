@@ -4,8 +4,14 @@ package com.backend.springjpa.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Setter
+@Getter
 public class ProductVariantDto {
     private String id;
     @NotBlank(message = "SKU is required")
@@ -24,62 +30,5 @@ public class ProductVariantDto {
 
     private String productId;
     private String percentage;
-
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getSku() {
-        return sku;
-    }
-
-    public void setSku(String sku) {
-        this.sku = sku;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public String getStockQty() {
-        return stockQty;
-    }
-
-    public void setStockQty(String stockQty) {
-        this.stockQty = stockQty;
-    }
-
-
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
-        this.productId = productId;
-    }
-
-    public String getPercentage() {
-        return percentage;
-    }
-
-    public void setPercentage(String percentage) {
-        this.percentage = percentage;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    private List<ReviewDto> reviews;
 }

@@ -1,5 +1,6 @@
 package com.backend.springjpa.repository;
 
+import com.backend.springjpa.dto.ProductVariantAverage;
 import com.backend.springjpa.dto.StockRiskReport;
 import com.backend.springjpa.entity.ProductVariant;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.swing.text.html.Option;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,4 +56,21 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
             @Param("highRisk") int highRisk,
             @Param("mediumRisk") int mediumRisk
     );
+
+
+    @Query(value = """
+            SELECT pv.id as id,pv.name AS name,
+            pv.sku AS sku, pv.price AS price,
+            AVG(r.rating) as averageRate
+            FROM product_variants pv
+            JOIN reviews r ON r.product_variant_id = pv.id
+            WHERE r.product_variant_id = :id AND r.updated = true AND r.created_at BETWEEN :start AND :end
+            GROUP BY pv.id
+            """, nativeQuery = true)
+    ProductVariantAverage getProductVariantAverage(@Param("id") Long id,
+                                                   @Param("start") LocalDateTime start,
+                                                   @Param("end") LocalDateTime end);
+
+
+
 }
