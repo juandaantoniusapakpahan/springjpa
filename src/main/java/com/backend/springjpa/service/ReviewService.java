@@ -7,15 +7,12 @@ import com.backend.springjpa.entity.ProductVariant;
 import com.backend.springjpa.entity.Review;
 import com.backend.springjpa.entity.User;
 import com.backend.springjpa.exception.ResourceNotFoundException;
-import com.backend.springjpa.repository.OrderItemRepository;
 import com.backend.springjpa.repository.ReviewRepository;
 import jakarta.transaction.Transactional;
-import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,12 +1,16 @@
 package com.backend.springjpa.service;
 
+import com.backend.springjpa.dto.ProductVariantAverage;
 import com.backend.springjpa.dto.ProductVariantDto;
+import com.backend.springjpa.dto.ReviewDto;
 import com.backend.springjpa.dto.StockRiskReport;
 import com.backend.springjpa.entity.Product;
 import com.backend.springjpa.entity.ProductVariant;
+import com.backend.springjpa.exception.BadRequestException;
 import com.backend.springjpa.exception.ConflictException;
 import com.backend.springjpa.exception.ResourceNotFoundException;
 import com.backend.springjpa.mapper.ProductVariantMapper;
+import com.backend.springjpa.mapper.ReviewMapper;
 import com.backend.springjpa.repository.ProductRepository;
 import com.backend.springjpa.repository.ProductVariantRepository;
 import jakarta.transaction.Transactional;
@@ -16,7 +20,8 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -25,7 +30,8 @@ public class ProductVariantService {
     private final ProductVariantRepository productVariantRepository;
     private final ProductRepository productRepository;
 
-    public ProductVariantService(ProductVariantRepository productVariantRepository, ProductRepository productRepository) {
+    public ProductVariantService(ProductVariantRepository productVariantRepository,
+                                 ProductRepository productRepository) {
         this.productVariantRepository = productVariantRepository;
         this.productRepository = productRepository;
     }
@@ -73,5 +79,22 @@ public class ProductVariantService {
     public ProductVariant getProductVariantById(Long id) {
         return productVariantRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product variant not found"));
+    }
+
+    public ProductVariantDto getProductVariantAndReview(Long id) {
+        ProductVariant productVariant = productVariantRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException("Product Variant not found"));
+
+        ProductVariantDto dto = ProductVariantMapper.toProductVariantDto(productVariant);
+        List<ReviewDto> reviewDto = productVariant.getReviews().stream().map(ReviewMapper::entityToDto).toList();
+        dto.setReviews(reviewDto);
+        return dto;
+    }
+
+    public ProductVariantAverage getProductVariantAvgRate(Long variantId, LocalDate start, LocalDate end) {
+        if (variantId == null || start == null || end == null) {
+            throw new BadRequestException("Request param is required");
+        }
+        return productVariantRepository.getProductVariantAverage(variantId, start.atStartOfDay(), end.atTime(LocalTime.MAX));
     }
 }
