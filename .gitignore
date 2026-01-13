@@ -40,3 +40,6 @@ build/
 .DS_Store
 /out/
 Thumbs.db
+
+# Spring Boot config
+src/main/resources/application.yaml

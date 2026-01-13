@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: springjpa
+  datasource:
+    url: jdbc:postgresql://localhost:5432/springjpadb
+    username: springjpadb
+    password: springjpadb
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: f815ff8ecb72a7
+    password: cddb2ecf14d1fe
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+security:
+  jwt:
+    secret-key: 3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b
+    expiration-time: 864000000
+
+review:
+  expiration-time: 7
+  scheduler:
+    review-non-updated: 600000
+
+payment:
+  expiration-time: 5
+  scheduler:
+    payment-expired: 300000
